@@ -200,8 +200,11 @@ namespace POEditor
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            fs.Dispose();
-            fs.Close();
+            if (!(fs == null))
+            {
+                fs.Dispose();
+                fs.Close();
+            }       
         }
     }
 }
