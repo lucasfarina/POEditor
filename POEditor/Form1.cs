@@ -18,6 +18,7 @@ namespace POEditor
             InitializeComponent();
         }
         string poFile;
+        System.IO.FileStream fs;
         List<WordPair> wordPairs = new List<WordPair>();
         int _selected = -1;
 
@@ -86,6 +87,13 @@ namespace POEditor
                             wordPairs.Add(new WordPair(source, translation));
                     }
                 }
+                if (!(fs == null))
+                {
+                    fs.Dispose();
+                    fs.Close();
+                }
+                fs = System.IO.File.OpenWrite(poFile);
+                //System.IO.StreamWriter sw = new System.IO.StreamWriter()
             }
 
             listBox1.Items.Clear();
@@ -188,6 +196,12 @@ namespace POEditor
         private void fQAToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("If you are experiencing incorrect or corrupt special characters, please re-save your file with UTF-8 encoding in your notepad before opening.", "FQA");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            fs.Dispose();
+            fs.Close();
         }
     }
 }
