@@ -26,7 +26,7 @@
     <ProductName>POEditor</ProductName>
     <PublisherName>Garage 227 Studios</PublisherName>
     <SuiteName>G227 Tools</SuiteName>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
