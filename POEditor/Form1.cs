@@ -17,9 +17,9 @@ namespace POEditor
         {
             InitializeComponent();
         }
-        string poFile;
-        System.IO.FileStream fs;
-        List<WordPair> wordPairs = new List<WordPair>();
+        string poFilePath;
+        POFile currentPOFile = null;
+
         int _selected = -1;
 
         public int Selected
@@ -31,10 +31,10 @@ namespace POEditor
             set
             {
                 _selected = value;
-                if (_selected > -1 && _selected < wordPairs.Count)
+                if (_selected > -1 && _selected < currentPOFile.wordPairs.Count)
                 {
                     safePassText = true;
-                    textBox1.Text = wordPairs[_selected].Translation;
+                    textBox1.Text = currentPOFile.wordPairs[_selected].Translation;
                     safePassText = false;
                 }
             }
@@ -47,94 +47,52 @@ namespace POEditor
             DialogResult dr = openFileDialog1.ShowDialog();
             if (dr == DialogResult.OK)
             {
-                poFile = openFileDialog1.FileName;
+                poFilePath = openFileDialog1.FileName;
                 LoadFile();
             }
         }
 
-        private void LoadFile()
+        private void LoadFile(bool shouldClear = true)
         {
-            wordPairs.Clear();
-            if (System.IO.File.Exists(poFile))
-            {
-                string[] file = IOManager.GetFile(poFile);
-                string source = "";
-                string translation = "";
-                bool first = true;
-                bool lang = true;
-                foreach (string line in file)
-                {
-                    if (lang && line.Contains("Language: "))
-                    {
-                        string lineTrim = line.Trim();
-                        string language = lineTrim.ExtractFromString("\"Language: ", "\\n\"");
-                        label2.Text = language;
-                        lang = false;
-                    }
-                    if (line.Contains("msgid"))
-                    {
-                        string lineTrim = line.Trim();
-                        source = lineTrim.ExtractFromString("msgid \"", "\"");
-                        //MessageBox.Show(source);
-                    }
-                    if (line.Contains("msgstr"))
-                    {
-                        string lineTrim = line.Trim();
-                        translation = line.ExtractFromString("msgstr \"", "\"");
-                        if (first)
-                            first = false;
-                        else
-                            wordPairs.Add(new WordPair(source, translation));
-                    }
-                }
-                if (!(fs == null))
-                {
-                    fs.Dispose();
-                    fs.Close();
-                }
-                fs = System.IO.File.OpenWrite(poFile);
-                //System.IO.StreamWriter sw = new System.IO.StreamWriter()
-            }
+            if(currentPOFile != null) currentPOFile.FreeFile();
 
+            currentPOFile = new POFile(poFilePath);
+
+            if (shouldClear)
+            {
+                RefreshFile();
+            }
+        }
+
+        public void RefreshFile()
+        {
+            safePassText = true;
+            safePass = true;
+            textBox1.Text = "";
+            label2.Text = currentPOFile.Language;
+            safePassText = false;
             listBox1.Items.Clear();
             listBox2.Items.Clear();
-            foreach (WordPair wp in wordPairs)
+            foreach (WordPair wp in currentPOFile.wordPairs)
             {
                 listBox1.Items.Add(wp.Source);
                 listBox2.Items.Add(wp.Translation);
             }
+            safePass = false;
         }
 
         private void SaveFile()
         {
-            if (System.IO.File.Exists(poFile))
+            if(currentPOFile != null)
             {
-                int w = 0;
-                string[] lines = IOManager.GetFile(poFile);
-                bool nextMsgStr = false;
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    string line = lines[i];
-                    if (line.Contains(wordPairs[w].Source))
-                    {
-                        nextMsgStr = true;
-                    }
-                    if (line.Contains("msgstr") && nextMsgStr)
-                    {
-                        lines[i] = "msgstr \"" + wordPairs[w].Translation + "\"";
-                        w++;
-                        if (w >= wordPairs.Count) { break; }
-                        nextMsgStr = false;
-                    }
-                }
-                IOManager.WriteFile(poFile, lines);
+                currentPOFile.SaveFile();
             }
         }
 
         private void Edit(int id, string newValue)
         {
-            wordPairs[id].Translation = newValue;
-            listBox2.Items[id] = wordPairs[id].Translation;
+            currentPOFile.wordPairs[id].Translation = newValue;
+            listBox2.Items[id] = currentPOFile.wordPairs[id].Translation;
         }
 
         bool safePassText = false;
@@ -200,11 +158,46 @@ namespace POEditor
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!(fs == null))
+        
+        }
+
+        private void MergeWithFile(bool justEmpty)
+        {
+            string oldPath = "";
+            if (!String.IsNullOrEmpty(poFilePath))
             {
-                fs.Dispose();
-                fs.Close();
-            }       
+                oldPath = openFileDialog1.FileName;
+            }
+            DialogResult dr = openFileDialog1.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                string mergeFilePath = openFileDialog1.FileName;
+
+                if (mergeFilePath == oldPath)
+                    return;
+                if (String.IsNullOrEmpty(mergeFilePath))
+                    return;
+
+                POFile mergeFile = new POFile(mergeFilePath);
+
+                currentPOFile.MergeFile(mergeFile, justEmpty);
+
+                RefreshFile();
+            }
+            if (!String.IsNullOrEmpty(poFilePath))
+            {
+                openFileDialog1.FileName = oldPath;
+            }
+        }
+
+        private void mergeWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MergeWithFile(false);
+        }
+
+        private void mergeJustEmptyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MergeWithFile(true);
         }
     }
 }

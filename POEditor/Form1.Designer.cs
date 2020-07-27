@@ -35,6 +35,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fQAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mergeWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,6 +46,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.mergeJustEmptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +54,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(495, 24);
@@ -95,6 +99,22 @@
             this.fQAToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
             this.fQAToolStripMenuItem.Text = "FQA";
             this.fQAToolStripMenuItem.Click += new System.EventHandler(this.fQAToolStripMenuItem_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mergeWithToolStripMenuItem,
+            this.mergeJustEmptyToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // mergeWithToolStripMenuItem
+            // 
+            this.mergeWithToolStripMenuItem.Name = "mergeWithToolStripMenuItem";
+            this.mergeWithToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeWithToolStripMenuItem.Text = "MergeWith";
+            this.mergeWithToolStripMenuItem.Click += new System.EventHandler(this.mergeWithToolStripMenuItem_Click);
             // 
             // listBox1
             // 
@@ -174,6 +194,13 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "PO file|*.po";
             // 
+            // mergeJustEmptyToolStripMenuItem
+            // 
+            this.mergeJustEmptyToolStripMenuItem.Name = "mergeJustEmptyToolStripMenuItem";
+            this.mergeJustEmptyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeJustEmptyToolStripMenuItem.Text = "MergeJustEmpty";
+            this.mergeJustEmptyToolStripMenuItem.Click += new System.EventHandler(this.mergeJustEmptyToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -219,6 +246,9 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fQAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mergeWithToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mergeJustEmptyToolStripMenuItem;
     }
 }
 
